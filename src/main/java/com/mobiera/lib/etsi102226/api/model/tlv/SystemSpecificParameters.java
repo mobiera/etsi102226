@@ -37,21 +37,21 @@ public class SystemSpecificParameters extends SimpleTLV {
 	public byte [] getValue() throws IOException {
 		ByteArrayOutputStream bo = new ByteArrayOutputStream();
 		
-		// Volatile data space limit TLV
+		// Volatile data space limit TLV (GP: 2-byte quota, most significant byte first)
 		if (volatileDataSpaceLimit != null) {
 			bo.write(0xC7);
 			bo.write(2);
-			bo.write((byte) volatileDataSpaceLimit.intValue());
 			bo.write((byte) (volatileDataSpaceLimit.intValue() >>> 8));
+			bo.write((byte) volatileDataSpaceLimit.intValue());
 			
 		}
 		
-		// Non Volatile data space limit TLV
+		// Non Volatile data space limit TLV (GP: 2-byte quota, most significant byte first)
 		if (nonVolatileDataSpaceLimit != null) {
 			bo.write(0xC8);
 			bo.write(2);
-			bo.write((byte) nonVolatileDataSpaceLimit.intValue());
 			bo.write((byte) (nonVolatileDataSpaceLimit.intValue() >>> 8));
+			bo.write((byte) nonVolatileDataSpaceLimit.intValue());
 			
 		}
 		
