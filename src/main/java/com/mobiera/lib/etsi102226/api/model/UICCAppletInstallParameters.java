@@ -1,70 +1,54 @@
 package com.mobiera.lib.etsi102226.api.model;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import com.mobiera.lib.etsi102226.api.model.tlv.ApplicationSpecificParameters;
-import com.mobiera.lib.etsi102226.api.model.tlv.SIMToolkitApplicationSpecificParameters;
-import com.mobiera.lib.etsi102226.api.model.tlv.STKAppletSystemSpecificParameters;
 import com.mobiera.lib.etsi102226.api.model.tlv.SystemSpecificParameters;
 import com.mobiera.lib.etsi102226.api.model.tlv.UICCAccessApplicationSpecificParameters;
+import com.mobiera.lib.etsi102226.api.model.tlv.UICCAppletSystemSpecificParameters;
 import com.mobiera.lib.etsi102226.api.model.tlv.UICCToolkitApplicationSpecificParameters;
-import com.mobiera.lib.etsi102226.api.model.tlv.STKAppletSystemSpecificParameters.Builder;
 
 /**
  * Base class for Install Parameters field according to ETSI 102.226
- * 
+ *
+ * The UICC Toolkit (80) and UICC Access (81) TLVs are carried in the UICC System
+ * Specific Parameters (EA), within the System Specific Parameters (EF):
+ * EF { C7, C8, EA { 80, 81 } } followed by C9
+ *
  * Each applet type shall extend this class
- * 
+ *
  * @author genaris
  *
  */
 public class UICCAppletInstallParameters extends InstallParameters {
 
-	protected UICCToolkitApplicationSpecificParameters toolkitParameters;
-	protected UICCAccessApplicationSpecificParameters accessParameters;
-	protected SystemSpecificParameters sysParameters;
-	
+	protected UICCAppletSystemSpecificParameters sysParameters;
+
 	public UICCAppletInstallParameters() {
 		super();
+		sysParameters = new UICCAppletSystemSpecificParameters();
 	}
-	
-	public UICCAppletInstallParameters(ApplicationSpecificParameters appParams, 
+
+	public UICCAppletInstallParameters(ApplicationSpecificParameters appParams,
 			UICCToolkitApplicationSpecificParameters uiccParams) {
-		super();
+		this();
 		setAppParameters(appParams);
 		setUICCToolkitParameters(uiccParams);
 	}
-	
+
 	public void setUICCToolkitParameters(UICCToolkitApplicationSpecificParameters uiccParams) {
-		this.toolkitParameters = uiccParams;
+		this.sysParameters.setUICCToolkitParameters(uiccParams);
 	}
 
 	public void setUICCAccessParameters(UICCAccessApplicationSpecificParameters accessParams) {
-		this.accessParameters = accessParams;
+		this.sysParameters.setUICCAccessParameters(accessParams);
 	}
 
 	@Override
 	protected SystemSpecificParameters getSystemSpecificParameters() {
 		return this.sysParameters;
 	}
-	
-	@Override
-	public byte [] getBytes() throws IOException {
-		ByteArrayOutputStream bo = new ByteArrayOutputStream();
-		
-		// Add UICC Specific parameters
-		bo.write(toolkitParameters.getBytes());
-		
-		bo.write(accessParameters.getBytes());
-				
-		// Append System / App specific parameters (if any)
-		bo.write(super.getBytes());
-		
-		return bo.toByteArray();
-	}
-	
+
 	/**
 	 * Builder for UICCAppletInstallParameters. Handy for most UICC Toolkit applets.
 	 * 
@@ -97,7 +81,7 @@ public class UICCAppletInstallParameters extends InstallParameters {
 		}
 		
 		public Builder volatileDataSpaceLimit(int limit) {
-			this.nonVolatileDataSpaceLimit = limit;
+			this.volatileDataSpaceLimit = limit;
 			return this;
 		}
 		
@@ -164,12 +148,11 @@ public class UICCAppletInstallParameters extends InstallParameters {
 		public UICCAppletInstallParameters build() {
 			UICCAppletInstallParameters output = new UICCAppletInstallParameters();
 			
-			output.sysParameters = new SystemSpecificParameters();
 			output.sysParameters.setNonVolatileDataSpaceLimit(this.nonVolatileDataSpaceLimit);
 			output.sysParameters.setVolatileDataSpaceLimit(this.volatileDataSpaceLimit);
-			
-			output.toolkitParameters  = this.toolkitParameters;
-			output.accessParameters = this.accessParameters;
+
+			output.setUICCToolkitParameters(this.toolkitParameters);
+			output.setUICCAccessParameters(this.accessParameters);
 			output.appParameters = this.appParameters;
 			
 			return output;

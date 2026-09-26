@@ -31,10 +31,12 @@ public class UICCSystemSpecificParameters extends SimpleTLV  {
 		ByteArrayOutputStream bo = new ByteArrayOutputStream();
 		
 		// Add specific UICC Toolkit TLV
-		bo.write(toolkitParams.getBytes());
-		
-		// Add specific UICC Access TLV
-		bo.write(accessParams.getBytes());
+		if (toolkitParams != null)
+			bo.write(toolkitParams.getBytes());
+
+		// Add specific UICC Access TLV (absent: no UICC file system access)
+		if (accessParams != null)
+			bo.write(accessParams.getBytes());
 		return bo.toByteArray();
 		
 	}

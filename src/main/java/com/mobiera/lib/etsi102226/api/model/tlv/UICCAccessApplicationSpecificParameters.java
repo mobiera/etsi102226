@@ -46,7 +46,7 @@ public class UICCAccessApplicationSpecificParameters extends SimpleTLV {
 			// Access Domain DAP LV
 			if (accessDomainDap != null) {
 				bo.write((byte)accessDomainDap.length); // Access Domain DAP Length
-				bo.write(adfAid); // Acces Domain value
+				bo.write(accessDomainDap); // Access Domain DAP value
 			} else {
 				bo.write((byte)0); // Access Domain DAP Length
 			}
