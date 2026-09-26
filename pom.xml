@@ -4,7 +4,7 @@
 	<groupId>com.mobiera.libs</groupId>
 	<artifactId>etsi102226</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.6</version>
+	<version>1.0.7</version>
     <name>Etsi102226</name>
    <description>Etsi102226 Java Library</description>
    <url>https://github.com/mobiera/etsi102226</url>
