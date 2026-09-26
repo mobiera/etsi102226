@@ -102,8 +102,8 @@ public class UICCToolkitApplicationSpecificParameters extends SimpleTLV {
 			bo.write((byte)0);
 		}
 
-		bo.write(maxNumberOfChannels);
-		
+		bo.write(maxNumberOfServices);
+
 		return bo.toByteArray();
 	}
 
